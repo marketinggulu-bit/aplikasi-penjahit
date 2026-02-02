@@ -281,4 +281,5 @@ elif menu == "⚙️ Setup System":
                 df_view_h['Upah_Luar'] = df_view_h['Upah_Luar'].apply(format_rupiah)
                 st.dataframe(df_view_h, use_container_width=True, hide_index=True)
             else:
+
                 st.info("Daftar harga masih kosong.")
