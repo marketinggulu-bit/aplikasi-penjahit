@@ -50,9 +50,8 @@ st.markdown("""
 
 from streamlit_gsheets import GSheetsConnection
 
-# Ambil rahasia dan bersihkan paksa karakter baris barunya
-creds = dict(st.secrets["connections"]["gsheets"])
-creds["private_key"] = creds["private_key"].replace("\\n", "\n")
+# Ini adalah satu-satunya baris koneksi yang Anda butuhkan
+conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Hubungkan menggunakan kredensial yang sudah bersih
 conn = st.connection("gsheets", type=GSheetsConnection, **creds)
@@ -289,6 +288,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
