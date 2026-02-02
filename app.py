@@ -48,7 +48,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. KONEKSI & FUNGSI DATA ---
+# Pastikan baris 52 tertulis persis seperti ini:
 conn = st.connection("gsheets", type="gsheets")
 
 def get_data(sheet_name):
@@ -283,5 +283,6 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
