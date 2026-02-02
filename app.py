@@ -50,11 +50,8 @@ st.markdown("""
 
 from streamlit_gsheets import GSheetsConnection
 
-# Cukup dua baris ini untuk koneksi
 conn = st.connection("gsheets", type=GSheetsConnection)
 
-# Hubungkan menggunakan kredensial yang sudah bersih
-conn = st.connection("gsheets", type=GSheetsConnection, **creds)
 
 def get_data(sheet_name):
     # Mengambil data real-time dari Google Sheets
@@ -288,6 +285,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
