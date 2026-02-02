@@ -50,7 +50,7 @@ st.markdown("""
 
 from streamlit_gsheets import GSheetsConnection
 
-# Ini adalah satu-satunya baris koneksi yang Anda butuhkan
+# Cukup dua baris ini untuk koneksi
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 # Hubungkan menggunakan kredensial yang sudah bersih
@@ -288,6 +288,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
