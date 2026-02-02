@@ -49,24 +49,8 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # HAPUS baris 52-53 yang lama, GANTI dengan ini:
-import json
-
-# Mengambil data rahasia dan menyusunnya kembali menjadi format JSON
-creds_dict = {
-    "type": st.secrets["connections"]["gsheets"]["type"],
-    "project_id": st.secrets["connections"]["gsheets"]["project_id"],
-    "private_key_id": st.secrets["connections"]["gsheets"]["private_key_id"],
-    "private_key": st.secrets["connections"]["gsheets"]["private_key"].replace("\\n", "\n"),
-    "client_email": st.secrets["connections"]["gsheets"]["client_email"],
-    "client_id": st.secrets["connections"]["gsheets"]["client_id"],
-    "auth_uri": st.secrets["connections"]["gsheets"]["auth_uri"],
-    "token_uri": st.secrets["connections"]["gsheets"]["token_uri"],
-    "auth_provider_x509_cert_url": st.secrets["connections"]["gsheets"]["auth_provider_x509_cert_url"],
-    "client_x509_cert_url": st.secrets["connections"]["gsheets"]["client_x509_cert_url"],
-}
-
-# Hubungkan secara manual
-conn = st.connection("gsheets", type=GSheetsConnection, credentials=creds_dict)
+from streamlit_gsheets import GSheetsConnection
+conn = st.connection("gsheets", type=GSheetsConnection)
 
 def get_data(sheet_name):
     # Mengambil data real-time dari Google Sheets
@@ -300,6 +284,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
