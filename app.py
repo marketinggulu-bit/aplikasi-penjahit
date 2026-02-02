@@ -50,6 +50,7 @@ st.markdown("""
 
 # HAPUS baris 52-53 yang lama, GANTI dengan ini:
 from streamlit_gsheets import GSheetsConnection
+
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def get_data(sheet_name):
@@ -284,6 +285,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
