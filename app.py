@@ -48,8 +48,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Pastikan baris 52 tertulis persis seperti ini:
-conn = st.connection("gsheets", type="gsheets")
+# GANTI baris 52-53 di app.py Anda dengan ini:
+conn = st.connection("gsheets", type=GSheetsConnection)
 
 def get_data(sheet_name):
     # Mengambil data real-time dari Google Sheets
@@ -283,6 +283,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
