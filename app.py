@@ -48,10 +48,14 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# HAPUS baris 52-53 yang lama, GANTI dengan ini:
 from streamlit_gsheets import GSheetsConnection
 
-conn = st.connection("gsheets", type=GSheetsConnection)
+# Ambil rahasia dan bersihkan paksa karakter baris barunya
+creds = dict(st.secrets["connections"]["gsheets"])
+creds["private_key"] = creds["private_key"].replace("\\n", "\n")
+
+# Hubungkan menggunakan kredensial yang sudah bersih
+conn = st.connection("gsheets", type=GSheetsConnection, **creds)
 
 def get_data(sheet_name):
     # Mengambil data real-time dari Google Sheets
@@ -285,6 +289,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
