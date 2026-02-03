@@ -73,13 +73,11 @@ if menu == "📊 Dashboard":
     df_p = get_data("Master_Penjahit")
     
     if not df_kerja.empty:
-        # 1. PERBAIKAN TANGGAL: Mengubah ke format tanggal, abaikan yang error
+        # 1. Perbaikan Tanggal
         df_kerja['Tanggal'] = pd.to_datetime(df_kerja['Tanggal'], errors='coerce')
-        
-        # 2. PEMBERSIHAN: Hapus baris yang tanggalnya kosong (NaT)
         df_kerja = df_kerja.dropna(subset=['Tanggal'])
         
-        # 3. AREA FILTER (Pastikan sejajar dengan baris di atasnya)
+        # 2. Area Filter
         st.markdown('<div style="background-color: #f0f7ff; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #dbeafe;"><h4 style="color: #1e40af; margin-top:0;">🔍 Filter Periode & Personel</h4></div>', unsafe_allow_html=True)
         
         c_f1, c_f2 = st.columns(2)
@@ -88,9 +86,8 @@ if menu == "📊 Dashboard":
         with c_f2:
             opsi_penjahit = ["SEMUA PENJAHIT"] + sorted(df_p['Nama'].unique().tolist())
             pilih_nama = st.selectbox("Pilih Nama Penjahit", options=opsi_penjahit)
-    
-       
-        # Logika Filter
+
+        # 3. Logika Filter
         mask = pd.Series([True] * len(df_kerja))
         if pilih_nama != "SEMUA PENJAHIT":
             mask &= (df_kerja['Nama'] == pilih_nama)
@@ -99,58 +96,58 @@ if menu == "📊 Dashboard":
         
         df_filtered = df_kerja[mask].copy()
 
-        # --- UPDATE BAGIAN METRICS DASHBOARD ---
-st.markdown("<br>", unsafe_allow_html=True)
-col_m1, col_m2 = st.columns(2)
-
-# Cek apakah kolom yang dibutuhkan ada
-if 'Total_Upah' in df_filtered.columns:
-    total_upah_val = df_filtered['Total_Upah'].sum()
-    total_personel = df_filtered['Nama'].nunique() if 'Nama' in df_filtered.columns else 0
-    
-    with col_m1:
-        st.markdown(f"""
-            <div style="background: linear-gradient(135deg, #065f46 0%, #10b981 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);">
-                <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">💰 Total Kewajiban Upah</span><br>
-                <span style="font-size: 2.2rem; font-weight: 900;">{format_rupiah(total_upah_val)}</span>
-            </div>
-        """, unsafe_allow_html=True)
-        
-    with col_m2:
-        st.markdown(f"""
-            <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">
-                <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">👥 Total Personel Aktif</span><br>
-                <span style="font-size: 2.2rem; font-weight: 900;">{total_personel} Orang</span>
-            </div>
-        """, unsafe_allow_html=True)
-else:
-    st.error("⚠️ Kolom 'Total_Upah' tidak ditemukan di Google Sheets. Periksa judul kolom Anda!")
-# --- UPDATE BAGIAN METRICS DASHBOARD ---
+        # 4. Metrics Dashboard (Hanya Muncul Sekali)
         st.markdown("<br>", unsafe_allow_html=True)
         col_m1, col_m2 = st.columns(2)
-        
-        with col_m1:
-            st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #065f46 0%, #10b981 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);">
-                    <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">💰 Total Kewajiban Upah</span><br>
-                    <span style="font-size: 2.2rem; font-weight: 900;">{format_rupiah(df_filtered['Total_Upah'].sum())}</span>
-                </div>
-            """, unsafe_allow_html=True)
-            
-        with col_m2:
-            # MENGHITUNG TOTAL PERSONEL UNIK SESUAI FILTER
-            total_personel = df_filtered['Nama'].nunique()
-            st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">
-                    <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">👥 Total Personel Aktif</span><br>
-                    <span style="font-size: 2.2rem; font-weight: 900;">{total_personel} Orang</span>
-                </div>
-            """, unsafe_allow_html=True)
 
-        # PASTIKAN BARIS DI BAWAH INI SEJAJAR DENGAN 'st.markdown("<br>", ...)' DI ATAS
-        st.markdown("<br><h3 style='color: #1e3a8a;'>👥 Rincian Per Personel</h3>", unsafe_allow_html=True)
-        rekap = df_filtered.groupby('Nama').agg({'Qty':'sum', 'Total_Upah':'sum'}).sort_values('Total_Upah', ascending=False).reset_index()
-        
+        if 'Total_Upah' in df_filtered.columns:
+            total_upah_val = df_filtered['Total_Upah'].sum()
+            total_personel = df_filtered['Nama'].nunique()
+            
+            with col_m1:
+                st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #065f46 0%, #10b981 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);">
+                        <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">💰 Total Kewajiban Upah</span><br>
+                        <span style="font-size: 2.2rem; font-weight: 900;">{format_rupiah(total_upah_val)}</span>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+            with col_m2:
+                st.markdown(f"""
+                    <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">
+                        <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">👥 Total Personel Aktif</span><br>
+                        <span style="font-size: 2.2rem; font-weight: 900;">{total_personel} Orang</span>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            # 5. Rincian Per Personel
+            st.markdown("<br><h3 style='color: #1e3a8a;'>👥 Rincian Per Personel</h3>", unsafe_allow_html=True)
+            rekap = df_filtered.groupby('Nama').agg({'Qty':'sum', 'Total_Upah':'sum'}).sort_values('Total_Upah', ascending=False).reset_index()
+            
+            for index, row in rekap.iterrows():
+                border_color = "#10b981" if index % 2 == 0 else "#3b82f6"
+                st.markdown(f"""
+                    <div style="background: white; padding: 18px 30px; border-radius: 18px; margin-bottom: 12px; border-left: 8px solid {border_color}; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="flex: 2;">
+                                <span style="color: #64748b; font-size: 0.8rem; font-weight: bold;">NAMA PERSONEL</span><br>
+                                <span style="color: #1e293b; font-size: 1.2rem; font-weight: 800;">{row['Nama'].upper()}</span>
+                            </div>
+                            <div style="flex: 1; text-align: center; background: #f8fafc; padding: 10px; border-radius: 12px;">
+                                <span style="color: #64748b; font-size: 0.7rem; font-weight: bold;">VOLUME</span><br>
+                                <span style="color: #334155; font-size: 1.1rem; font-weight: 700;">{int(row['Qty'])} Pcs</span>
+                            </div>
+                            <div style="flex: 2; text-align: right;">
+                                <span style="color: #64748b; font-size: 0.8rem; font-weight: bold;">UPAH TERAKUMULASI</span><br>
+                                <span style="color: {border_color}; font-size: 1.4rem; font-weight: 900;">{format_rupiah(row['Total_Upah'])}</span>
+                            </div>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.error("⚠️ Kolom 'Total_Upah' tidak ditemukan. Pastikan judul kolom di Google Sheets sudah benar!")
+    else:
+        st.info("Menunggu kiriman data dari Google Sheets...")
         for index, row in rekap.iterrows():
             border_color = "#10b981" if index % 2 == 0 else "#3b82f6"
             st.markdown(f"""
@@ -317,6 +314,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
