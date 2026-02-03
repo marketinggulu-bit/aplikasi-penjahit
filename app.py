@@ -72,11 +72,12 @@ if menu == "📊 Dashboard":
     df_p = get_data("Master_Penjahit")
     
     if not df_kerja.empty:
+        # 1. Bersihkan data TERLEBIH DAHULU
         df_kerja['Tanggal'] = pd.to_datetime(df_kerja['Tanggal'], errors='coerce')
         df_kerja = df_kerja.dropna(subset=['Tanggal'])
         
+        # 2. Setup UI Filter
         st.markdown('<div style="background-color: #f0f7ff; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #dbeafe;"><h4 style="color: #1e40af; margin-top:0;">🔍 Filter Periode & Personel</h4></div>', unsafe_allow_html=True)
-        
         c_f1, c_f2 = st.columns(2)
         with c_f1:
             tgl_range = st.date_input("Pilih Rentang Waktu", [])
@@ -84,12 +85,16 @@ if menu == "📊 Dashboard":
             opsi_penjahit = ["SEMUA PENJAHIT"] + sorted(df_p['Nama'].unique().tolist())
             pilih_nama = st.selectbox("Pilih Nama Penjahit", options=opsi_penjahit)
 
-        mask = pd.Series([True] * len(df_kerja))
+        # 3. Buat mask BARU berdasarkan data yang sudah bersih
+        mask = pd.Series([True] * len(df_kerja), index=df_kerja.index) 
+        
         if pilih_nama != "SEMUA PENJAHIT":
             mask &= (df_kerja['Nama'] == pilih_nama)
+            
         if len(tgl_range) == 2:
             mask &= (df_kerja['Tanggal'].dt.date >= tgl_range[0]) & (df_kerja['Tanggal'].dt.date <= tgl_range[1])
         
+        # 4. Filter data sekarang aman dilakukan
         df_filtered = df_kerja[mask].copy()
 
         st.markdown("<br>", unsafe_allow_html=True)
@@ -285,6 +290,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
