@@ -99,6 +99,32 @@ if menu == "📊 Dashboard":
         
         df_filtered = df_kerja[mask].copy()
 
+        # --- UPDATE BAGIAN METRICS DASHBOARD ---
+st.markdown("<br>", unsafe_allow_html=True)
+col_m1, col_m2 = st.columns(2)
+
+# Cek apakah kolom yang dibutuhkan ada
+if 'Total_Upah' in df_filtered.columns:
+    total_upah_val = df_filtered['Total_Upah'].sum()
+    total_personel = df_filtered['Nama'].nunique() if 'Nama' in df_filtered.columns else 0
+    
+    with col_m1:
+        st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #065f46 0%, #10b981 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);">
+                <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">💰 Total Kewajiban Upah</span><br>
+                <span style="font-size: 2.2rem; font-weight: 900;">{format_rupiah(total_upah_val)}</span>
+            </div>
+        """, unsafe_allow_html=True)
+        
+    with col_m2:
+        st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px; border-radius: 25px; text-align: center; color: white; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);">
+                <span style="font-size: 1.1rem; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">👥 Total Personel Aktif</span><br>
+                <span style="font-size: 2.2rem; font-weight: 900;">{total_personel} Orang</span>
+            </div>
+        """, unsafe_allow_html=True)
+else:
+    st.error("⚠️ Kolom 'Total_Upah' tidak ditemukan di Google Sheets. Periksa judul kolom Anda!")
 # --- UPDATE BAGIAN METRICS DASHBOARD ---
         st.markdown("<br>", unsafe_allow_html=True)
         col_m1, col_m2 = st.columns(2)
@@ -291,6 +317,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
