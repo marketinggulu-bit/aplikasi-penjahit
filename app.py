@@ -66,20 +66,20 @@ with st.sidebar:
     menu = st.radio("MENU UTAMA", ["📊 Dashboard", "📝 Input Kerja", "📂 Laporan", "⚙️ Setup System"])
 
 # --- 5. LOGIKA MENU: DASHBOARD ---
+# --- 5. LOGIKA MENU: DASHBOARD ---
 if menu == "📊 Dashboard":
     st.markdown("<h1 style='text-align: center; color: #1e3a8a; margin-bottom: 20px;'>✨ Ringkasan Eksekutif Utama</h1>", unsafe_allow_html=True)
     df_kerja = get_data("Data_Kerja")
     df_p = get_data("Master_Penjahit")
     
-    # Ganti baris 75 dengan ini:
-if not df_kerja.empty:
-    # errors='coerce' akan mengubah data bukan tanggal menjadi "NaT" (kosong)
-    df_kerja['Tanggal'] = pd.to_datetime(df_kerja['Tanggal'], errors='coerce')
-    
-    # Hapus baris yang tanggalnya gagal terbaca (kosong)
-    df_kerja = df_kerja.dropna(subset=['Tanggal'])
-    
-        # Area Filter
+    if not df_kerja.empty:
+        # 1. PERBAIKAN TANGGAL: Mengubah ke format tanggal, abaikan yang error
+        df_kerja['Tanggal'] = pd.to_datetime(df_kerja['Tanggal'], errors='coerce')
+        
+        # 2. PEMBERSIHAN: Hapus baris yang tanggalnya kosong (NaT)
+        df_kerja = df_kerja.dropna(subset=['Tanggal'])
+        
+        # 3. AREA FILTER (Pastikan sejajar dengan baris di atasnya)
         st.markdown('<div style="background-color: #f0f7ff; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #dbeafe;"><h4 style="color: #1e40af; margin-top:0;">🔍 Filter Periode & Personel</h4></div>', unsafe_allow_html=True)
         
         c_f1, c_f2 = st.columns(2)
@@ -88,7 +88,8 @@ if not df_kerja.empty:
         with c_f2:
             opsi_penjahit = ["SEMUA PENJAHIT"] + sorted(df_p['Nama'].unique().tolist())
             pilih_nama = st.selectbox("Pilih Nama Penjahit", options=opsi_penjahit)
-
+    
+       
         # Logika Filter
         mask = pd.Series([True] * len(df_kerja))
         if pilih_nama != "SEMUA PENJAHIT":
@@ -290,6 +291,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
