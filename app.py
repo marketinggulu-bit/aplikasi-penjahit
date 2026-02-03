@@ -144,7 +144,7 @@ if menu == "📊 Dashboard":
                     </div>
                 """, unsafe_allow_html=True)
         else:
-            st.error("⚠️ Kolom 'Total_Upah' tidak ditemukan.")
+            st.error("Data Tidak Ada Input Dulu Mbak Putri wkwkwkwk")
     else:
         st.info("Menunggu kiriman data dari Google Sheets...")
 # --- 6. LOGIKA MENU: INPUT KERJA ---
@@ -290,6 +290,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
