@@ -71,9 +71,14 @@ if menu == "📊 Dashboard":
     df_kerja = get_data("Data_Kerja")
     df_p = get_data("Master_Penjahit")
     
-    if not df_kerja.empty:
-        df_kerja['Tanggal'] = pd.to_datetime(df_kerja['Tanggal'])
-        
+    # Ganti baris 75 dengan ini:
+if not df_kerja.empty:
+    # errors='coerce' akan mengubah data bukan tanggal menjadi "NaT" (kosong)
+    df_kerja['Tanggal'] = pd.to_datetime(df_kerja['Tanggal'], errors='coerce')
+    
+    # Hapus baris yang tanggalnya gagal terbaca (kosong)
+    df_kerja = df_kerja.dropna(subset=['Tanggal'])
+    
         # Area Filter
         st.markdown('<div style="background-color: #f0f7ff; padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #dbeafe;"><h4 style="color: #1e40af; margin-top:0;">🔍 Filter Periode & Personel</h4></div>', unsafe_allow_html=True)
         
@@ -285,6 +290,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
