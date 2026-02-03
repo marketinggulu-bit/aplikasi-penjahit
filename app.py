@@ -170,7 +170,21 @@ if menu == "📊 Dashboard":
             """, unsafe_allow_html=True) 
     else:
         st.info("Menunggu kiriman data dari Google Sheets...")
-
+# --- Bagian Akhir Menu Laporan ---
+            buffer = io.BytesIO()
+            with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+                df_filtered.to_excel(writer, index=False, sheet_name='Laporan')
+            
+            st.download_button(
+                label="📥 Simpan Laporan ke Excel (.xlsx)", 
+                data=buffer, 
+                file_name=f"Laporan_{pilih_p}.xlsx", 
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+        else:
+            st.warning("⚠️ Tidak ada data untuk periode ini.")
+    else:
+        st.info("💡 Silakan pilih Nama Penjahit untuk melihat rincian laporan.")
 # --- 6. LOGIKA MENU: INPUT KERJA ---
 elif menu == "📝 Input Kerja":
     st.markdown("<h1 style='text-align: center; color: #d63384;'>🌸 Form Pencatatan Produksi</h1>", unsafe_allow_html=True)
@@ -314,6 +328,7 @@ elif menu == "⚙️ Setup System":
             else:
 
                 st.info("Daftar harga masih kosong.")
+
 
 
 
